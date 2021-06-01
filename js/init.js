@@ -9,10 +9,6 @@ let Esri_WorldGrayCanvas = L.tileLayer('https://server.arcgisonline.com/ArcGIS/r
 
 Esri_WorldGrayCanvas.addTo(map)
 
-// L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-//     attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
-// }).addTo(map);
-
 fetch(url)
 	.then(response => {
 		return response.json();
@@ -37,23 +33,25 @@ let exampleOptions = {
 
 let allLayers;
 
-
+// this is the boundary layer located as a geojson in the /data/ folder 
 const boundaryLayer = "../data/ca_counties.geojson"
-let boundary;
-let ptsWithin;
-let collected;
-let allPoints = [];
+let boundary; // place holder for the data
+let collected; // variable for turf.js collected points 
+let allPoints = []; // array for all the data points
+
+//function for clicking on polygons
 function onEachFeature(feature, layer) {
-    // does this feature have a property named popupContent?
     console.log(feature.properties)
     if (feature.properties.values) {
+        //count the values within the polygon by using .length on the values array created from turf.js collect
         let count = feature.properties.values.length
-        console.log(count)
-        let text = count.toString()
-        layer.bindPopup(text);
+        console.log(count) // see what the count is on click
+        let text = count.toString() // convert it to a string
+        layer.bindPopup(text); //bind the pop up to the number
     }
 }
 
+// for coloring the polygon
 function getStyles(data){
     console.log(data)
     let myStyle = {
@@ -64,7 +62,9 @@ function getStyles(data){
     };
     if (data.properties.values.length > 0){
         myStyle.opacity = 0
+        
     }
+
     return myStyle
 }
 
@@ -74,10 +74,16 @@ function getBoundary(layer){
         return response.json();
         })
     .then(data =>{
+                //set the boundary to data
                 boundary = data
+
+                // run the turf collect geoprocessing
                 collected = turf.collect(boundary, thePoints, 'speakEnglish', 'values');
+                // just for fun, you can make buffers instead of the collect too:
                 // collected = turf.buffer(thePoints, 50,{units:'miles'});
                 console.log(collected.features)
+
+                // here is the geoJson of the `collected` result:
                 L.geoJson(collected,{onEachFeature: onEachFeature,style:function(feature)
                 {
                     console.log(feature)
@@ -85,9 +91,11 @@ function getBoundary(layer){
                         return {color: "#ff0000",stroke: false};
                     }
                     else{
-                        return{opacity:0}
+                        // make the polygon gray and blend in with basemap if it doesn't have any values
+                        return{opacity:0,color = "#efefef" }
                     }
                 }
+                // add the geojson to the map
                     }).addTo(map)
         }
     )   
@@ -97,7 +105,9 @@ console.log(boundary)
 
 function addMarker(data){
     let speakEnglish = data.doyouspeakenglishfluently
+    // create the turfJS point
     let thisPoint = turf.point([Number(data.lng),Number(data.lat)],{speakEnglish})
+    // put all the turfJS points into `allPoints`
     allPoints.push(thisPoint)
     if(data.doyouspeakenglishfluently == "Yes"){
         exampleOptions.fillColor = "green"
@@ -145,8 +155,12 @@ function formatData(theData){
         speakOtherLanguage.addTo(map)
         
         allLayers = L.featureGroup([speakFluentEnglish,speakOtherLanguage]);
+
+        // step 1: turn allPoints into a turf.js featureCollection
         thePoints = turf.featureCollection(allPoints)
         console.log(thePoints)
+
+        // step 2: run the spatial analysis
         getBoundary(boundaryLayer)
         console.log('boundary')
         console.log(boundary)
