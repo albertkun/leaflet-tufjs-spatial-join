@@ -1,0 +1,38 @@
+body{
+    display: grid;
+    grid-template-columns: 1fr 1fr; 
+    grid-auto-rows: minmax(5px, auto);
+    grid-template-areas: "header header" "mappanel sidebar" 
+}
+
+header{
+    grid-area: header;
+}
+
+#map{
+    height:90vh;
+    grid-area: mappanel;
+} 
+
+#contents{
+    grid-area: sidebar;
+    display:grid;
+    grid-template-columns: repeat(2, 1fr);
+}
+
+/* fix for survey to fit in the iframe */
+#survey {
+    overflow: hidden;
+    /* 16:9 aspect ratio */
+    padding-top: 0%;
+    position: relative;
+}
+
+#survey iframe {
+   border: 0;
+   height: 100%;
+   left: 0;
+   position: absolute;
+   top: 0;
+   width: 100%;
+}
