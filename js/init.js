@@ -173,7 +173,3 @@ let layers = {
 
 L.control.layers(null,layers).addTo(map)
 
-
-collected.features.properties.values
-
-
