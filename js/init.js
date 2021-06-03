@@ -92,7 +92,7 @@ function getBoundary(layer){
                     }
                     else{
                         // make the polygon gray and blend in with basemap if it doesn't have any values
-                        return{opacity:0,color = "#efefef" }
+                        return{opacity:0,color:"#efefef" }
                     }
                 }
                 // add the geojson to the map
