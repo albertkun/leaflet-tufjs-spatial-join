@@ -34,7 +34,7 @@ let exampleOptions = {
 let allLayers;
 
 // this is the boundary layer located as a geojson in the /data/ folder 
-const boundaryLayer = "../data/ca_counties.geojson"
+const boundaryLayer = "../data/ca_counties_small.geojson"
 let boundary; // place holder for the data
 let collected; // variable for turf.js collected points 
 let allPoints = []; // array for all the data points
