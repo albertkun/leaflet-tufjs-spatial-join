@@ -68,6 +68,7 @@ function getStyles(data){
     return myStyle
 }
 
+// new function to get the boundary layer and add data to it with turf.js
 function getBoundary(layer){
     fetch(layer)
     .then(response => {

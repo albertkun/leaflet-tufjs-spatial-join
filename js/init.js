@@ -74,16 +74,16 @@ function addMarker(data){
 };
 
 function createButtons(lat,lng,title){
-    const newButton = document.createElement("button"); // adds a new button
-    newButton.id = "button"+title; // gives the button a unique id
-    newButton.innerHTML = title; // gives the button a title
-    newButton.setAttribute("lat",lat); // sets the latitude 
-    newButton.setAttribute("lng",lng); // sets the longitude 
+    const newButton = document.createElement("button");
+    newButton.id = "button"+title;
+    newButton.innerHTML = title;
+    newButton.setAttribute("lat",lat);
+    newButton.setAttribute("lng",lng);
     newButton.addEventListener('click', function(){
-        map.flyTo([lat,lng]); //this is the flyTo from Leaflet
+        map.flyTo([lat,lng]);
     })
     const spaceForButtons = document.getElementById('placeForButtons')
-    spaceForButtons.appendChild(newButton);//this adds the button to our page.
+    spaceForButtons.appendChild(newButton);
 };
 
 function loadData(url){
@@ -104,6 +104,7 @@ function processData(results){
     nonEnglishFirst.addTo(map) // add our layers after markers have been made  
     let allLayers = L.featureGroup([englishFirst,nonEnglishFirst]);
     map.fitBounds(allLayers.getBounds());
+
     // step 1: turn allPoints into a turf.js featureCollection
     thePoints = turf.featureCollection(allPoints)
 
@@ -113,7 +114,6 @@ function processData(results){
 
 loadData(dataUrl)
 
-// toggle the legend for englishFirstLegend grouplayer
 englishFirstLegendHTML.addEventListener("click",toggleEnglishLayer) 
 
 function toggleEnglishLayer(){
@@ -125,7 +125,6 @@ function toggleEnglishLayer(){
     }
 }
 
-// toggle the legend for nonEnglishFirstLegend grouplayer
 nonEnglishFirstLegendHtml.addEventListener("click",toggleNonEnglishLayer) 
 
 function toggleNonEnglishLayer(){
@@ -150,8 +149,7 @@ function onEachFeature(feature, layer) {
     }
 }
 
-
-
+// new function to get the boundary layer and add data to it with turf.js
 function getBoundary(layer){
     fetch(layer)
     .then(response => {
